@@ -32,7 +32,7 @@ public class GameService {
         currentGameDTO.setBoardStatus(game.getBoard());
         currentGameDTO.setPlayer(game.getTurn());
 
-        boardService.setBoard(game.getBoard());
+        boardService.setCurrentBoard(game.getBoard());
         currentGameDTO.setMancalaP1(boardService.getPlayerMancala(Player.PLAYER_1));
         currentGameDTO.setMancalaP2(boardService.getPlayerMancala(Player.PLAYER_2));
 
@@ -41,7 +41,7 @@ public class GameService {
 
     public void moveFrom(long boardId, Player player, int fromIdx) {
         Game game = gameRepository.findById(boardId).orElseThrow(EntityNotFoundException::new);
-        boardService.setBoard(game.getBoard());
+        boardService.setCurrentBoard(game.getBoard());
         boolean hasMoved = boardService.moveFrom(fromIdx, player);
         if (hasMoved) {
             Player nextTurn = this.getNextTurn(game.getTurn());
