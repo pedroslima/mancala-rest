@@ -1,6 +1,9 @@
 package com.pslima.mancala.service;
 
 import com.pslima.mancala.enums.Player;
+import com.pslima.mancala.factory.BoardPlayer;
+import com.pslima.mancala.factory.BoardPlayer1;
+import com.pslima.mancala.factory.BoardPlayer2;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -10,20 +13,15 @@ import java.util.List;
 public class BoardService {
     public static final List<Integer> DEFAULT_BOARD = Arrays.asList(4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0);
     private static final int PLAYER1_MANCALA = 6;
-    private static final int PLAYER2_MANCALA = 13;
-    private static final int PLAYER1_RANGE_MIN = 0;
-    private static final int PLAYER1_RANGE_MAX = 5;
-    private static final int PLAYER2_RANGE_MIN = 7;
-    private static final int PLAYER2_RANGE_MAX = 12;
 
-    private List<Integer> board;
+    private List<Integer> currentBoard;
 
     public BoardService() {
-        this.board = DEFAULT_BOARD;
+        this.currentBoard = DEFAULT_BOARD;
     }
 
-    public void setBoard(List<Integer> board) {
-        this.board = board;
+    public void setCurrentBoard(List<Integer> currentBoard) {
+        this.currentBoard = currentBoard;
     }
 
     public List<Integer> getDefaultBoard() {
@@ -31,45 +29,64 @@ public class BoardService {
     }
 
     public List<Integer> getCurrentBoard() {
-        return board;
+        return currentBoard;
     }
 
     public int getPlayerMancala(Player player) {
-        if (player == Player.PLAYER_1) {
-            return board.get(PLAYER1_MANCALA);
-        }
-        return board.get(PLAYER2_MANCALA);
+        BoardPlayer boardPlayer = getBoardPlayer(player);
+        return boardPlayer.getPlayerMancala();
     }
 
     public boolean moveFrom(int fromIdx, Player player) {
-        List<Integer> newBoard = this.board;
+        BoardPlayer boardPlayer = getBoardPlayer(player);
 
-        if ((player == Player.PLAYER_1) && !inRange(fromIdx, PLAYER1_RANGE_MIN, PLAYER1_RANGE_MAX) ||
-                (player == Player.PLAYER_2) && !inRange(fromIdx, PLAYER2_RANGE_MIN, PLAYER2_RANGE_MAX)) {
+        List<Integer> board = this.currentBoard;
+
+        if (isPlayerOutRange(fromIdx, boardPlayer)) {
             return false;
         }
 
-        int seeds = newBoard.get(fromIdx);
-        newBoard.set(fromIdx, 0);
+        int seeds = board.get(fromIdx);
+        board.set(fromIdx, 0);
+
         int step = 0;
         while (seeds > 0) {
-            int idx = (fromIdx + 1 + step) % newBoard.size();
-            if ((player == Player.PLAYER_1 && idx != PLAYER2_MANCALA) || (player == Player.PLAYER_2 && idx != PLAYER1_MANCALA)) {
-                Integer currValue = newBoard.get(idx);
-                newBoard.set(idx, Integer.sum(currValue, 1));
+            int idx = (fromIdx + 1 + step) % board.size();
+            if (idx != boardPlayer.getRivalMancala()) {
+                Integer currValue = board.get(idx);
+                board.set(idx, Integer.sum(currValue, 1));
+
+                if (seeds == 1 && board.get(idx) == 1) {
+                    Integer mancalaTotal = board.get(boardPlayer.getPlayerMancala());
+                    Integer rivalTotal = board.get(12 - idx);
+                    rivalTotal = Integer.sum(rivalTotal, 1);
+                    board.set(12 - idx, 0);
+                    board.set(idx, 0);
+                    board.set(boardPlayer.getPlayerMancala(), Integer.sum(rivalTotal, mancalaTotal));
+                }
                 seeds--;
             }
 
             step++;
         }
 
-        this.board = newBoard;
+        this.currentBoard = board;
         return true;
     }
 
+    private boolean isPlayerOutRange(int fromIdx, BoardPlayer player) {
+        return !inRange(fromIdx, player.getPlayerMinRange(), player.getPlayerMaxRange());
+    }
 
     private boolean inRange(int num, int min, int max) {
         return num >= min && num <= max;
+    }
+
+    private BoardPlayer getBoardPlayer(Player player){
+        if (player == Player.PLAYER_1){
+            return new BoardPlayer1();
+        }
+        return new BoardPlayer2();
     }
 
 }

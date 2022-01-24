@@ -32,7 +32,7 @@ public class BoardServiceTests {
         List<Integer> initial = Arrays.asList(4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0);
         List<Integer> expected = Arrays.asList(0, 5, 5, 5, 5, 4, 0, 4, 4, 4, 4, 4, 4, 0);
 
-        boardService.setBoard(initial);
+        boardService.setCurrentBoard(initial);
         boardService.moveFrom(0, Player.PLAYER_1);
         List<Integer> actual = boardService.getCurrentBoard();
 
@@ -44,7 +44,7 @@ public class BoardServiceTests {
         List<Integer> initial = Arrays.asList(4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0);
         List<Integer> expected = Arrays.asList(4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0);
 
-        boardService.setBoard(initial);
+        boardService.setCurrentBoard(initial);
         boolean hasMoved = boardService.moveFrom(6, Player.PLAYER_1);
         List<Integer> actual = boardService.getCurrentBoard();
 
@@ -57,7 +57,7 @@ public class BoardServiceTests {
         List<Integer> initial = Arrays.asList(4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0);
         List<Integer> expected = Arrays.asList(4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0);
 
-        boardService.setBoard(initial);
+        boardService.setCurrentBoard(initial);
         boolean hasMoved = boardService.moveFrom(1, Player.PLAYER_2);
         List<Integer> actual = boardService.getCurrentBoard();
 
@@ -70,7 +70,7 @@ public class BoardServiceTests {
         List<Integer> initial = Arrays.asList(0, 0, 0, 0, 0, 24, 0, 4, 4, 4, 4, 4, 4, 0);
         List<Integer> expected = Arrays.asList(2, 2, 2, 2, 1, 1, 2, 6, 6, 6, 6, 6, 6, 0);
 
-        boardService.setBoard(initial);
+        boardService.setCurrentBoard(initial);
         boolean hasMoved = boardService.moveFrom(5, Player.PLAYER_1);
         List<Integer> actual = boardService.getCurrentBoard();
 
@@ -83,7 +83,7 @@ public class BoardServiceTests {
         List<Integer> initial = Arrays.asList(4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 24, 0);
         List<Integer> expected = Arrays.asList(6, 6, 6, 6, 6, 6, 0, 2, 2, 2, 2, 1, 1, 2);
 
-        boardService.setBoard(initial);
+        boardService.setCurrentBoard(initial);
         boolean hasMoved = boardService.moveFrom(12, Player.PLAYER_2);
         List<Integer> actual = boardService.getCurrentBoard();
 
@@ -91,4 +91,29 @@ public class BoardServiceTests {
         Assert.assertEquals(expected, actual);
     }
 
+    @Test
+    public void boardServiceMoveToShouldTakeRivalSeedsOnLastSeed() {
+        List<Integer> initial = Arrays.asList(0, 0, 1, 0, 0, 0, 23, 0, 0, 4, 0, 0, 0, 20);
+        List<Integer> expected = Arrays.asList(0, 0, 0, 0, 0, 0, 28, 0, 0, 0, 0, 0, 0, 20);
+
+        boardService.setCurrentBoard(initial);
+        boolean hasMoved = boardService.moveFrom(2, Player.PLAYER_1);
+        List<Integer> actual = boardService.getCurrentBoard();
+
+        Assert.assertTrue(hasMoved);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void boardServiceMoveToP2ShouldTakeRivalSeedsOnLastSeed() {
+        List<Integer> initial = Arrays.asList(0, 0, 4, 0, 0, 0, 20, 0, 0, 1, 0, 0, 0, 23);
+        List<Integer> expected = Arrays.asList(0, 0, 0, 0, 0, 0, 20, 0, 0, 0, 0, 0, 0, 28);
+
+        boardService.setCurrentBoard(initial);
+        boolean hasMoved = boardService.moveFrom(9, Player.PLAYER_2);
+        List<Integer> actual = boardService.getCurrentBoard();
+
+        Assert.assertTrue(hasMoved);
+        Assert.assertEquals(expected, actual);
+    }
 }
