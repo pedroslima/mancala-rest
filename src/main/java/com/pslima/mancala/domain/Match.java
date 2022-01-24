@@ -1,6 +1,6 @@
 package com.pslima.mancala.domain;
 
-import com.pslima.mancala.enums.GameStatus;
+import com.pslima.mancala.enums.MatchStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,17 +12,17 @@ import java.util.Date;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Game {
+public class Match {
     private @Id @GeneratedValue Long id;
     private Date startTime;
-    private GameStatus gameStatus;
+    private MatchStatus matchStatus;
     @OneToOne()
     @JoinColumn(name="board_id", referencedColumnName = "id")
     private Board board;
 
-    public Game(Date startTime, GameStatus gameStatus, Board board) {
+    public Match(Date startTime, MatchStatus matchStatus, Board board) {
         this.startTime = startTime;
-        this.gameStatus = gameStatus;
+        this.matchStatus = matchStatus;
         this.board = board;
     }
 }

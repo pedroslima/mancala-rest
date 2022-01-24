@@ -30,10 +30,28 @@ public class BoardService {
         return curr;
     }
 
-    public Boolean moveFrom(long boardId, Player player, int index) {
-        return false;
+    public void moveFrom(long boardId, Player player, int fromIdx) {
+        Optional<Board> board = boardRepository.findById(boardId);
+        if (board.isPresent()){
+            Board board1 = moveFrom(board.get(), player, fromIdx);
+            boardRepository.save(board1);
+        }
     }
 
-//    TODO: endTurn
-//    TODO: moveFrom
+    private Board moveFrom(Board board,Player player, int fromIdx){
+        int[] pockets = board.getPockets();
+        int seeds = pockets[fromIdx];
+        pockets[fromIdx] = 0;
+        int step = 0;
+        while (seeds > 0){
+            int idx = (fromIdx + 1 + step) % pockets.length;
+            pockets[idx]++;
+            seeds--;
+            step++;
+        }
+
+        board.setPockets(pockets);
+        return board;
+    }
+
 }
