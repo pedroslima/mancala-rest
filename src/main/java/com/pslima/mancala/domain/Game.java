@@ -1,5 +1,6 @@
 package com.pslima.mancala.domain;
 
+import com.pslima.mancala.enums.Player;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,9 +21,11 @@ public class Game {
             generator = "sequence_id_game"
     )
     private Long id;
-    private int[] pockets;
+    private int[] board;
+    private Player turn;
 
-    public Game(int[] pockets) {
-        this.pockets = pockets;
+    public Game(int[] board) {
+        this.board = board;
+        this.turn = Player.PLAYER_1;
     }
 }

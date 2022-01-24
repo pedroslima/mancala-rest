@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CurrentBoardDTO {
+public class CurrentGameDTO {
     Player player;
     int mancalaP1;
     int mancalaP2;

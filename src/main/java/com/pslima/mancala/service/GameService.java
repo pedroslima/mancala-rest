@@ -1,13 +1,13 @@
 package com.pslima.mancala.service;
 
-import com.pslima.mancala.DTO.CurrentBoardDTO;
+import com.pslima.mancala.DTO.CurrentGameDTO;
 import com.pslima.mancala.domain.Game;
 import com.pslima.mancala.enums.Player;
 import com.pslima.mancala.repository.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import javax.persistence.EntityNotFoundException;
 
 @Service
 public class GameService {
@@ -16,42 +16,41 @@ public class GameService {
     GameRepository gameRepository;
 
     public Game newGame() {
-        int[] initialBoard = new int[]{4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0};
-        return gameRepository.save(new Game(initialBoard));
+        int[] defaultBoard = new BoardService().getDefaultBoard();
+        return gameRepository.save(new Game(defaultBoard));
     }
 
-    public CurrentBoardDTO getCurrentBoard(long id) {
-        CurrentBoardDTO curr = new CurrentBoardDTO();
-        Optional<Game> board = gameRepository.findById(id);
-        curr.setBoardStatus(board.get().getPockets());
-        curr.setMancalaP1(0);
-        curr.setMancalaP1(0);
-        curr.setPlayer(Player.PLAYER_1);
-        return curr;
+    public CurrentGameDTO getCurrentBoard(long id) {
+        CurrentGameDTO currentGameDTO = new CurrentGameDTO();
+        Game game = gameRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+
+        currentGameDTO.setBoardStatus(game.getBoard());
+        currentGameDTO.setPlayer(game.getTurn());
+
+        BoardService boardService = new BoardService(game.getBoard());
+        currentGameDTO.setMancalaP1(boardService.getPlayerMancala(Player.PLAYER_1));
+        currentGameDTO.setMancalaP2(boardService.getPlayerMancala(Player.PLAYER_2));
+
+        return currentGameDTO;
     }
 
     public void moveFrom(long boardId, Player player, int fromIdx) {
-        Optional<Game> board = gameRepository.findById(boardId);
-        if (board.isPresent()){
-            Game game1 = moveFrom(board.get(), player, fromIdx);
-            gameRepository.save(game1);
+        Game game = gameRepository.findById(boardId).orElseThrow(EntityNotFoundException::new);
+
+        BoardService boardService = new BoardService(game.getBoard());
+        boolean hasMoved = boardService.moveFrom(fromIdx, player);
+        if (hasMoved) {
+            Player nextTurn = this.getNextTurn(game.getTurn());
+            game.setTurn(nextTurn);
+            game.setBoard(boardService.getCurrentBoard());
+            gameRepository.save(game);
         }
     }
 
-    private Game moveFrom(Game game, Player player, int fromIdx){
-        int[] pockets = game.getPockets();
-        int seeds = pockets[fromIdx];
-        pockets[fromIdx] = 0;
-        int step = 0;
-        while (seeds > 0){
-            int idx = (fromIdx + 1 + step) % pockets.length;
-            pockets[idx]++;
-            seeds--;
-            step++;
+    private Player getNextTurn(Player currPlayer){
+        if (currPlayer == Player.PLAYER_1){
+            return Player.PLAYER_2;
         }
-
-        game.setPockets(pockets);
-        return game;
+        return Player.PLAYER_1;
     }
-
 }
