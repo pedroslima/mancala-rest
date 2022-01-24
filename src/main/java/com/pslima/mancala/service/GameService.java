@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 
 @Service
 public class GameService {
@@ -15,9 +16,13 @@ public class GameService {
     @Autowired
     GameRepository gameRepository;
 
+    @Autowired
+    BoardService boardService;
+
     public Game newGame() {
-        int[] defaultBoard = new BoardService().getDefaultBoard();
-        return gameRepository.save(new Game(defaultBoard));
+        List<Integer> defaultBoard = boardService.getDefaultBoard();
+        Game game = new Game(defaultBoard);
+        return gameRepository.save(game);
     }
 
     public CurrentGameDTO getCurrentBoard(long id) {
@@ -27,7 +32,7 @@ public class GameService {
         currentGameDTO.setBoardStatus(game.getBoard());
         currentGameDTO.setPlayer(game.getTurn());
 
-        BoardService boardService = new BoardService(game.getBoard());
+        boardService.setBoard(game.getBoard());
         currentGameDTO.setMancalaP1(boardService.getPlayerMancala(Player.PLAYER_1));
         currentGameDTO.setMancalaP2(boardService.getPlayerMancala(Player.PLAYER_2));
 
@@ -36,13 +41,13 @@ public class GameService {
 
     public void moveFrom(long boardId, Player player, int fromIdx) {
         Game game = gameRepository.findById(boardId).orElseThrow(EntityNotFoundException::new);
-
-        BoardService boardService = new BoardService(game.getBoard());
+        boardService.setBoard(game.getBoard());
         boolean hasMoved = boardService.moveFrom(fromIdx, player);
         if (hasMoved) {
             Player nextTurn = this.getNextTurn(game.getTurn());
             game.setTurn(nextTurn);
-            game.setBoard(boardService.getCurrentBoard());
+            List<Integer> currentBoard = boardService.getCurrentBoard();
+            game.setBoard(currentBoard);
             gameRepository.save(game);
         }
     }

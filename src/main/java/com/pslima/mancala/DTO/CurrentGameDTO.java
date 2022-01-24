@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -14,5 +16,5 @@ public class CurrentGameDTO {
     Player player;
     int mancalaP1;
     int mancalaP2;
-    int[] boardStatus;
+    List<Integer> boardStatus;
 }

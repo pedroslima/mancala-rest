@@ -5,10 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -21,10 +20,12 @@ public class Game {
             generator = "sequence_id_game"
     )
     private Long id;
-    private int[] board;
+    @ElementCollection
+    @CollectionTable(name="board", joinColumns=@JoinColumn(name="game_id"))
+    private List<Integer> board = new ArrayList<>();
     private Player turn;
 
-    public Game(int[] board) {
+    public Game(List<Integer> board) {
         this.board = board;
         this.turn = Player.PLAYER_1;
     }
