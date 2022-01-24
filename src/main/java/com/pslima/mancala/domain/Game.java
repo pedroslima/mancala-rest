@@ -13,7 +13,7 @@ import javax.persistence.Id;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Board {
+public class Game {
     @Id
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
@@ -22,7 +22,7 @@ public class Board {
     private Long id;
     private int[] pockets;
 
-    public Board(int[] pockets) {
+    public Game(int[] pockets) {
         this.pockets = pockets;
     }
 }

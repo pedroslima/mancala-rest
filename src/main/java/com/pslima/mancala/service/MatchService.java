@@ -1,7 +1,7 @@
 package com.pslima.mancala.service;
 
 import com.pslima.mancala.DTO.MatchDTO;
-import com.pslima.mancala.domain.Board;
+import com.pslima.mancala.domain.Game;
 import com.pslima.mancala.enums.MatchStatus;
 import com.pslima.mancala.domain.Match;
 import com.pslima.mancala.repository.MatchRepository;
@@ -19,15 +19,15 @@ public class MatchService {
     MatchRepository matchRepository;
 
     @Autowired
-    BoardService boardService;
+    GameService gameService;
 
     public MatchDTO newMatch(){
-        Board board = boardService.newBoard();
-        Match match = matchRepository.save(new Match(new Date(), MatchStatus.STARTED, board));
+        Game game = gameService.newGame();
+        Match match = matchRepository.save(new Match(new Date(), MatchStatus.STARTED, game));
         return toGameItemDTO(match);
     }
 
-    public List<MatchDTO> listStartedGames(){
+    public List<MatchDTO> listStartedMatches(){
         List<Match> matches = matchRepository.findByMatchStatus(MatchStatus.STARTED);
         List<MatchDTO> gamesDTO = new ArrayList<>();
         for (Match match : matches) {
@@ -40,9 +40,9 @@ public class MatchService {
     private MatchDTO toGameItemDTO(Match match){
         MatchDTO dto = new MatchDTO();
         dto.setGameId(match.getId());
-        dto.setStartTime(match.getStartTime());
+        dto.setStartTime(match.getCreated());
         dto.setMatchStatus(match.getMatchStatus());
-        dto.setBoardId(match.getBoard().getId());
+        dto.setBoardId(match.getGame().getId());
         return dto;
     }
 

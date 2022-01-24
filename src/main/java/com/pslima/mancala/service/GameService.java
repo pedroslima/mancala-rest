@@ -1,28 +1,28 @@
 package com.pslima.mancala.service;
 
 import com.pslima.mancala.DTO.CurrentBoardDTO;
-import com.pslima.mancala.domain.Board;
+import com.pslima.mancala.domain.Game;
 import com.pslima.mancala.enums.Player;
-import com.pslima.mancala.repository.BoardRepository;
+import com.pslima.mancala.repository.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
-public class BoardService {
+public class GameService {
 
     @Autowired
-    BoardRepository boardRepository;
+    GameRepository gameRepository;
 
-    public Board newBoard() {
+    public Game newGame() {
         int[] initialBoard = new int[]{4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0};
-        return boardRepository.save(new Board(initialBoard));
+        return gameRepository.save(new Game(initialBoard));
     }
 
     public CurrentBoardDTO getCurrentBoard(long id) {
         CurrentBoardDTO curr = new CurrentBoardDTO();
-        Optional<Board> board = boardRepository.findById(id);
+        Optional<Game> board = gameRepository.findById(id);
         curr.setBoardStatus(board.get().getPockets());
         curr.setMancalaP1(0);
         curr.setMancalaP1(0);
@@ -31,15 +31,15 @@ public class BoardService {
     }
 
     public void moveFrom(long boardId, Player player, int fromIdx) {
-        Optional<Board> board = boardRepository.findById(boardId);
+        Optional<Game> board = gameRepository.findById(boardId);
         if (board.isPresent()){
-            Board board1 = moveFrom(board.get(), player, fromIdx);
-            boardRepository.save(board1);
+            Game game1 = moveFrom(board.get(), player, fromIdx);
+            gameRepository.save(game1);
         }
     }
 
-    private Board moveFrom(Board board,Player player, int fromIdx){
-        int[] pockets = board.getPockets();
+    private Game moveFrom(Game game, Player player, int fromIdx){
+        int[] pockets = game.getPockets();
         int seeds = pockets[fromIdx];
         pockets[fromIdx] = 0;
         int step = 0;
@@ -50,8 +50,8 @@ public class BoardService {
             step++;
         }
 
-        board.setPockets(pockets);
-        return board;
+        game.setPockets(pockets);
+        return game;
     }
 
 }

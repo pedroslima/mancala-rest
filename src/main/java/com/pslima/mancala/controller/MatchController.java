@@ -22,6 +22,6 @@ public class MatchController {
 
     @GetMapping("/match")
     List<MatchDTO> list() {
-        return matchService.listStartedGames();
+        return matchService.listStartedMatches();
     }
 }

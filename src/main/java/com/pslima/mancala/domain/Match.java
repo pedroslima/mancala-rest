@@ -14,15 +14,15 @@ import java.util.Date;
 @NoArgsConstructor
 public class Match {
     private @Id @GeneratedValue Long id;
-    private Date startTime;
+    private Date created;
     private MatchStatus matchStatus;
     @OneToOne()
-    @JoinColumn(name="board_id", referencedColumnName = "id")
-    private Board board;
+    @JoinColumn(name="game_id", referencedColumnName = "id")
+    private Game game;
 
-    public Match(Date startTime, MatchStatus matchStatus, Board board) {
-        this.startTime = startTime;
+    public Match(Date created, MatchStatus matchStatus, Game game) {
+        this.created = created;
         this.matchStatus = matchStatus;
-        this.board = board;
+        this.game = game;
     }
 }
