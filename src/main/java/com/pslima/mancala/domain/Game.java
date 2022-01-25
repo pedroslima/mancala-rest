@@ -1,5 +1,6 @@
 package com.pslima.mancala.domain;
 
+import com.pslima.mancala.enums.GameStatus;
 import com.pslima.mancala.enums.Player;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,9 +25,11 @@ public class Game {
     @CollectionTable(name = "board", joinColumns = @JoinColumn(name = "game_id"))
     private List<Integer> board = new ArrayList<>();
     private Player turn;
+    private GameStatus gameStatus;
 
     public Game(List<Integer> board) {
         this.board = board;
         this.turn = Player.PLAYER_1;
+        this.gameStatus = GameStatus.STARTED;
     }
 }

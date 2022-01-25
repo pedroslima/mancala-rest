@@ -1,6 +1,6 @@
 package com.pslima.mancala.DTO;
 
-import com.pslima.mancala.enums.MatchStatus;
+import com.pslima.mancala.enums.GameStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,5 +16,5 @@ public class MatchDTO {
     private Long gameId;
     private Long boardId;
     private Date startTime;
-    private MatchStatus matchStatus;
+    private GameStatus gameStatus;
 }

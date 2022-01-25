@@ -36,6 +36,12 @@ public class BoardService {
         return this.currentBoard.get(boardPlayer.getPlayerMancala());
     }
 
+    public boolean isPlayerPocketsEmpty(Player player){
+        BoardPlayer boardPlayer=getBoardPlayer(player);
+        List<Integer> pockets = this.currentBoard.subList(boardPlayer.getPlayerMinRange(), boardPlayer.getPlayerMaxRange() + 1);
+        return pockets.stream().allMatch(n -> n == 0);
+    }
+
     public boolean moveFrom(int fromIdx, Player player) {
         BoardPlayer boardPlayer = getBoardPlayer(player);
 
