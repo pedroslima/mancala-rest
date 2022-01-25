@@ -12,16 +12,11 @@ import java.util.List;
 @Service
 public class BoardService {
     public static final List<Integer> DEFAULT_BOARD = Arrays.asList(4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0);
-    private static final int PLAYER1_MANCALA = 6;
 
     private List<Integer> currentBoard;
 
     public BoardService() {
         this.currentBoard = DEFAULT_BOARD;
-    }
-
-    public void setCurrentBoard(List<Integer> currentBoard) {
-        this.currentBoard = currentBoard;
     }
 
     public List<Integer> getDefaultBoard() {
@@ -30,6 +25,10 @@ public class BoardService {
 
     public List<Integer> getCurrentBoard() {
         return currentBoard;
+    }
+
+    public void setCurrentBoard(List<Integer> currentBoard) {
+        this.currentBoard = currentBoard;
     }
 
     public int getPlayerMancala(Player player) {
@@ -82,8 +81,8 @@ public class BoardService {
         return num >= min && num <= max;
     }
 
-    private BoardPlayer getBoardPlayer(Player player){
-        if (player == Player.PLAYER_1){
+    private BoardPlayer getBoardPlayer(Player player) {
+        if (player == Player.PLAYER_1) {
             return new BoardPlayer1();
         }
         return new BoardPlayer2();

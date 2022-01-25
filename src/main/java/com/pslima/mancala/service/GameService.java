@@ -43,7 +43,7 @@ public class GameService {
         Game game = gameRepository.findById(boardId).orElseThrow(EntityNotFoundException::new);
         boardService.setCurrentBoard(game.getBoard());
 
-        if (game.getTurn() != player){
+        if (game.getTurn() != player) {
             return;
         }
 
@@ -57,8 +57,8 @@ public class GameService {
         }
     }
 
-    private Player getNextTurn(Player currPlayer){
-        if (currPlayer == Player.PLAYER_1){
+    private Player getNextTurn(Player currPlayer) {
+        if (currPlayer == Player.PLAYER_1) {
             return Player.PLAYER_2;
         }
         return Player.PLAYER_1;

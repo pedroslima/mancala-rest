@@ -21,7 +21,7 @@ public class Game {
     )
     private Long id;
     @ElementCollection
-    @CollectionTable(name="board", joinColumns=@JoinColumn(name="game_id"))
+    @CollectionTable(name = "board", joinColumns = @JoinColumn(name = "game_id"))
     private List<Integer> board = new ArrayList<>();
     private Player turn;
 

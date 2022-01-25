@@ -2,8 +2,8 @@ package com.pslima.mancala.service;
 
 import com.pslima.mancala.DTO.MatchDTO;
 import com.pslima.mancala.domain.Game;
-import com.pslima.mancala.enums.MatchStatus;
 import com.pslima.mancala.domain.Match;
+import com.pslima.mancala.enums.MatchStatus;
 import com.pslima.mancala.repository.MatchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,13 +21,13 @@ public class MatchService {
     @Autowired
     GameService gameService;
 
-    public MatchDTO newMatch(){
+    public MatchDTO newMatch() {
         Game game = gameService.newGame();
         Match match = matchRepository.save(new Match(new Date(), MatchStatus.STARTED, game));
         return toGameItemDTO(match);
     }
 
-    public List<MatchDTO> listStartedMatches(){
+    public List<MatchDTO> listStartedMatches() {
         List<Match> matches = matchRepository.findByMatchStatus(MatchStatus.STARTED);
         List<MatchDTO> gamesDTO = new ArrayList<>();
         for (Match match : matches) {
@@ -37,7 +37,7 @@ public class MatchService {
         return gamesDTO;
     }
 
-    private MatchDTO toGameItemDTO(Match match){
+    private MatchDTO toGameItemDTO(Match match) {
         MatchDTO dto = new MatchDTO();
         dto.setGameId(match.getId());
         dto.setStartTime(match.getCreated());
