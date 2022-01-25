@@ -17,17 +17,7 @@ public class BoardPlayer1 extends BoardPlayer {
     }
 
     @Override
-    public int getRivalMinRange() {
-        return PLAYER2_RANGE_MIN;
-    }
-
-    @Override
     public int getPlayerMaxRange() {
         return PLAYER1_RANGE_MAX;
-    }
-
-    @Override
-    public int getRivalMaxRange() {
-        return PLAYER2_RANGE_MAX;
     }
 }

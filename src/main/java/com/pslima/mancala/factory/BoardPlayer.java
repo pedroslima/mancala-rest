@@ -15,9 +15,5 @@ public abstract class BoardPlayer {
 
     public abstract int getPlayerMinRange();
 
-    public abstract int getRivalMinRange();
-
     public abstract int getPlayerMaxRange();
-
-    public abstract int getRivalMaxRange();
 }
