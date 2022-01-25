@@ -2,6 +2,7 @@ package com.pslima.mancala.service;
 
 import com.pslima.mancala.DTO.CurrentGameDTO;
 import com.pslima.mancala.domain.Game;
+import com.pslima.mancala.enums.GameStatus;
 import com.pslima.mancala.enums.Player;
 import com.pslima.mancala.repository.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,18 +43,36 @@ public class GameService {
     public void moveFrom(long boardId, Player player, int fromIdx) {
         Game game = gameRepository.findById(boardId).orElseThrow(EntityNotFoundException::new);
         boardService.setCurrentBoard(game.getBoard());
+
+        if (game.getTurn() != player || game.getGameStatus() != GameStatus.STARTED) {
+            return;
+        }
+
         boolean hasMoved = boardService.moveFrom(fromIdx, player);
+
+        GameStatus gameStatus = updateGameStatus();
+
         if (hasMoved) {
             Player nextTurn = this.getNextTurn(game.getTurn());
             game.setTurn(nextTurn);
             List<Integer> currentBoard = boardService.getCurrentBoard();
             game.setBoard(currentBoard);
+            game.setGameStatus(gameStatus);
             gameRepository.save(game);
         }
     }
 
-    private Player getNextTurn(Player currPlayer){
-        if (currPlayer == Player.PLAYER_1){
+    private GameStatus updateGameStatus() {
+        if (boardService.isPlayerPocketsEmpty(Player.PLAYER_1) || boardService.isPlayerPocketsEmpty(Player.PLAYER_2)){
+            int playerMancala1 = boardService.getPlayerMancala(Player.PLAYER_1);
+            int playerMancala2 = boardService.getPlayerMancala(Player.PLAYER_2);
+            return playerMancala1 > playerMancala2 ? GameStatus.PLAYER_1_WON: GameStatus.PLAYER_2_WON;
+        }
+        return GameStatus.STARTED;
+    }
+
+    private Player getNextTurn(Player currPlayer) {
+        if (currPlayer == Player.PLAYER_1) {
             return Player.PLAYER_2;
         }
         return Player.PLAYER_1;

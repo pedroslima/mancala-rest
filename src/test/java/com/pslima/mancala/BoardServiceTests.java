@@ -16,14 +16,6 @@ import java.util.List;
 @RunWith(SpringRunner.class)
 public class BoardServiceTests {
 
-    @TestConfiguration
-    static class BoardServiceTestConfiguration {
-        @Bean
-        public BoardService boardService() {
-            return new BoardService();
-        }
-    }
-
     @Autowired
     BoardService boardService;
 
@@ -115,5 +107,13 @@ public class BoardServiceTests {
 
         Assert.assertTrue(hasMoved);
         Assert.assertEquals(expected, actual);
+    }
+
+    @TestConfiguration
+    static class BoardServiceTestConfiguration {
+        @Bean
+        public BoardService boardService() {
+            return new BoardService();
+        }
     }
 }
