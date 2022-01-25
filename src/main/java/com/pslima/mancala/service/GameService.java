@@ -42,6 +42,11 @@ public class GameService {
     public void moveFrom(long boardId, Player player, int fromIdx) {
         Game game = gameRepository.findById(boardId).orElseThrow(EntityNotFoundException::new);
         boardService.setCurrentBoard(game.getBoard());
+
+        if (game.getTurn() != player){
+            return;
+        }
+
         boolean hasMoved = boardService.moveFrom(fromIdx, player);
         if (hasMoved) {
             Player nextTurn = this.getNextTurn(game.getTurn());

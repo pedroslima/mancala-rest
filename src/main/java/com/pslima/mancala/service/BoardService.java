@@ -34,7 +34,7 @@ public class BoardService {
 
     public int getPlayerMancala(Player player) {
         BoardPlayer boardPlayer = getBoardPlayer(player);
-        return boardPlayer.getPlayerMancala();
+        return this.currentBoard.get(boardPlayer.getPlayerMancala());
     }
 
     public boolean moveFrom(int fromIdx, Player player) {
