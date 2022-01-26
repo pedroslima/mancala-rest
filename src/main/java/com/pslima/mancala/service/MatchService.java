@@ -3,7 +3,6 @@ package com.pslima.mancala.service;
 import com.pslima.mancala.DTO.MatchDTO;
 import com.pslima.mancala.domain.Game;
 import com.pslima.mancala.domain.Match;
-import com.pslima.mancala.enums.GameStatus;
 import com.pslima.mancala.repository.MatchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,7 +27,7 @@ public class MatchService {
     }
 
     public List<MatchDTO> listStartedMatches() {
-        List<Match> matches = matchRepository.findByGameGameStatus(GameStatus.STARTED);
+        List<Match> matches = matchRepository.findAllByOrderByCreatedDesc();
         List<MatchDTO> gamesDTO = new ArrayList<>();
         for (Match match : matches) {
             MatchDTO matchDTO = toGameItemDTO(match);

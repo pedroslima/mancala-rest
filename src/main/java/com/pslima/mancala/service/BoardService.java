@@ -61,17 +61,20 @@ public class BoardService {
                 Integer currValue = board.get(idx);
                 board.set(idx, Integer.sum(currValue, 1));
 
-                if (seeds == 1 && board.get(idx) == 1) {
+                int rivalPocket = Math.abs(12-idx);
+                Integer rivalTotal = board.get(rivalPocket);
+
+
+//                TODO: propria raia
+                if (seeds == 1 && board.get(idx) == 1 && rivalTotal > 0) {
                     Integer mancalaTotal = board.get(boardPlayer.getPlayerMancala());
-                    Integer rivalTotal = board.get(12 - idx);
                     rivalTotal = Integer.sum(rivalTotal, 1);
-                    board.set(12 - idx, 0);
+                    board.set(rivalPocket, 0);
                     board.set(idx, 0);
                     board.set(boardPlayer.getPlayerMancala(), Integer.sum(rivalTotal, mancalaTotal));
                 }
                 seeds--;
             }
-
             step++;
         }
 

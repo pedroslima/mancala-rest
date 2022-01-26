@@ -49,7 +49,6 @@ public class GameService {
         }
 
         boolean hasMoved = boardService.moveFrom(fromIdx, player);
-
         GameStatus gameStatus = updateGameStatus();
 
         if (hasMoved) {
