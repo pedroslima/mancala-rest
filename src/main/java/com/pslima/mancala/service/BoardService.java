@@ -12,6 +12,7 @@ import java.util.List;
 @Service
 public class BoardService {
     public static final List<Integer> DEFAULT_BOARD = Arrays.asList(4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0);
+    public static final int TOTAL_SEEDS = 48;
 
     private List<Integer> currentBoard;
 
@@ -36,8 +37,8 @@ public class BoardService {
         return this.currentBoard.get(boardPlayer.getPlayerMancala());
     }
 
-    public boolean isPlayerPocketsEmpty(Player player){
-        BoardPlayer boardPlayer=getBoardPlayer(player);
+    public boolean isPlayerPocketsEmpty(Player player) {
+        BoardPlayer boardPlayer = getBoardPlayer(player);
         List<Integer> pockets = this.currentBoard.subList(boardPlayer.getPlayerMinRange(), boardPlayer.getPlayerMaxRange() + 1);
         return pockets.stream().allMatch(n -> n == 0);
     }
@@ -61,7 +62,7 @@ public class BoardService {
                 Integer currValue = board.get(idx);
                 board.set(idx, Integer.sum(currValue, 1));
 
-                int rivalPocket = Math.abs(12-idx);
+                int rivalPocket = Math.abs(12 - idx);
                 Integer rivalTotal = board.get(rivalPocket);
 
 
@@ -76,6 +77,23 @@ public class BoardService {
                 seeds--;
             }
             step++;
+        }
+
+        if (isPlayerPocketsEmpty(Player.PLAYER_1) || isPlayerPocketsEmpty(Player.PLAYER_2)) {
+            int playerMancala1 = getPlayerMancala(Player.PLAYER_1);
+            int playerMancala2 = getPlayerMancala(Player.PLAYER_2);
+            int seedsLeft = TOTAL_SEEDS - (playerMancala1 + playerMancala2);
+            Player winner = playerMancala1 > playerMancala2 ? Player.PLAYER_1 : Player.PLAYER_2;
+
+            BoardPlayer winnerBoarPlayer = getBoardPlayer(winner);
+            int winnerSeeds = board.get(winnerBoarPlayer.getPlayerMancala());
+            board.set(winnerBoarPlayer.getPlayerMancala(), winnerSeeds + seedsLeft);
+
+            for (int i = 0; i < board.size(); i++) {
+                if (winnerBoarPlayer.getPlayerMancala() != i && winnerBoarPlayer.getRivalMancala() != i) {
+                    board.set(i, 0);
+                }
+            }
         }
 
         this.currentBoard = board;
