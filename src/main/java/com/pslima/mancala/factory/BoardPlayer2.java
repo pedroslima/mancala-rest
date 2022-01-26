@@ -7,7 +7,7 @@ public class BoardPlayer2 extends BoardPlayer {
     }
 
     @Override
-    public int getRivalMancala() {
+    public int getOpponentMancala() {
         return PLAYER1_MANCALA;
     }
 
@@ -19,15 +19,5 @@ public class BoardPlayer2 extends BoardPlayer {
     @Override
     public int getPlayerMaxRange() {
         return PLAYER2_RANGE_MAX;
-    }
-
-    @Override
-    public int getRivalMinRange() {
-        return PLAYER1_RANGE_MIN;
-    }
-
-    @Override
-    public int getRivalMaxRange() {
-        return PLAYER1_RANGE_MAX;
     }
 }

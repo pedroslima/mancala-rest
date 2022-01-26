@@ -11,13 +11,9 @@ public abstract class BoardPlayer {
 
     public abstract int getPlayerMancala();
 
-    public abstract int getRivalMancala();
+    public abstract int getOpponentMancala();
 
     public abstract int getPlayerMinRange();
 
     public abstract int getPlayerMaxRange();
-
-    public abstract int getRivalMinRange();
-
-    public abstract int getRivalMaxRange();
 }

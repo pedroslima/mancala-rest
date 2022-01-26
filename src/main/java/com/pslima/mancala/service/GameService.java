@@ -62,7 +62,7 @@ public class GameService {
     }
 
     private GameStatus updateGameStatus() {
-        if (boardService.isPlayerPocketsEmpty(Player.PLAYER_1) || boardService.isPlayerPocketsEmpty(Player.PLAYER_2)){
+        if (boardService.isPlayerLanesEmpty(Player.PLAYER_1) || boardService.isPlayerLanesEmpty(Player.PLAYER_2)){
             int playerMancala1 = boardService.getPlayerMancala(Player.PLAYER_1);
             int playerMancala2 = boardService.getPlayerMancala(Player.PLAYER_2);
             return playerMancala1 > playerMancala2 ? GameStatus.PLAYER_1_WON: GameStatus.PLAYER_2_WON;
